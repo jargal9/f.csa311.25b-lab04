@@ -46,10 +46,10 @@ public class ArrayIntQueue implements IntQueue {
 
     /** {@inheritDoc} */
     public void clear() {
-        Arrays.fill(elementData, 0);
         size = 0;
         head = 0;
     }
+    
 
     /** {@inheritDoc} */
     public Integer dequeue() {
@@ -73,7 +73,7 @@ public class ArrayIntQueue implements IntQueue {
 
     /** {@inheritDoc} */
     public boolean isEmpty() {
-        return size >= 0;
+        return size == 0;
     }
 
     /** {@inheritDoc} */
@@ -92,17 +92,31 @@ public class ArrayIntQueue implements IntQueue {
      */
     private void ensureCapacity() {
         if (size == elementData.length) {
-            int oldCapacity = elementData.length;
-            int newCapacity = 2 * oldCapacity + 1;
+            int newCapacity = 2 * elementData.length + 1;
             int[] newData = new int[newCapacity];
-            for (int i = head; i < oldCapacity; i++) {
-                newData[i - head] = elementData[i];
+    
+            for (int i = 0; i < size; i++) {
+                newData[i] = elementData[(head + i) % elementData.length];
             }
-            for (int i = 0; i < head; i++) {
-                newData[head - i] = elementData[i];
-            }
+    
             elementData = newData;
             head = 0;
         }
-    }
+    }   
 }
+
+
+/**
+ * ХИЙХ:
+ * 1. {@link LinkedIntQueue}-д алдаа байхгүй. Бид танд туршилтын зарим жишээг өгсөн.
+ * Техникийн тестийн аргаар IntQueue интерфэйсийг туршиж үзэхийн тулд өөрийн нэгжийн тестийг бичээрэй
+ * mQueue ашиглах = шинэ LinkedIntQueue();
+ *
+ * 2.
+ * mQueue = new LinkedIntQueue(); гэж коммент бичиж, mQueue = new ArrayIntQueue(); гэсэн тайлбарыг арилгана уу.
+ * ArrayIntQueue-г туршиж, {@link ArrayIntQueue} анги дахь алдааг олохын тулд 1-р хэсгийн туршилтуудыг ашиглана уу.
+ * ArrayIntQueue-ийн хэрэгжилтийг бүтцийн туршилтын аргаар шалгахын тулд илүү олон нэгж тест бичнэ үү.
+ * ArrayIntQueue-ийн 100% шугамын хамрах хүрээг хангах зорилготой
+ *
+ * @ Зохиогч Алекс Локвуд, Жорж Гуо, Терри Ли
+ */
